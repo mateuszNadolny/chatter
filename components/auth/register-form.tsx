@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { AuthInput } from './auth-input';
 import { LuLoader2 } from 'react-icons/lu';
 
 const formSchema = z.object({
@@ -68,7 +68,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input type="text" {...field} />
+                    <AuthInput type="text" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
@@ -83,7 +83,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>E-mail</FormLabel>
                   <FormControl>
-                    <Input type="email" {...field} />
+                    <AuthInput type="email" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
@@ -98,7 +98,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" {...field} />
+                    <AuthInput type="password" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />

@@ -3,7 +3,7 @@ import { FaGithub, FaGoogle } from 'react-icons/fa';
 
 const SocialButtons = () => {
   return (
-    <div className="w-[80%] lg:w-[400px] flex flex-col items-center gap-3">
+    <div className="w-[80%] md:w-[400px] flex flex-col items-center gap-3">
       <p className="text-sm text-muted-foreground">Or continue with</p>
       <div className="w-full flex gap-2">
         <Button className="w-full" variant="secondary">

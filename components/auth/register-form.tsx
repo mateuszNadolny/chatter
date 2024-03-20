@@ -3,8 +3,11 @@
 import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import axios from 'axios';
+
+import { useToast } from '@/components/ui/use-toast';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,11 +20,12 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+
 import { AuthInput } from './auth-input';
 import { LuLoader2 } from 'react-icons/lu';
 
 const formSchema = z.object({
-  username: z.string().trim().min(3, {
+  name: z.string().trim().min(3, {
     message: 'Minimum 3 characters'
   }),
   email: z.string().trim().email({
@@ -34,11 +38,12 @@ const formSchema = z.object({
 
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: ''
     }
@@ -46,8 +51,15 @@ const RegisterForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    axios.post('/api/register', values).catch((error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Something went wrong',
+        description: error.response.data
+      });
+
+      setLoading(false);
+    });
     console.log(values);
   }
 
@@ -63,7 +75,7 @@ const RegisterForm = () => {
             <FormField
               disabled={loading}
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>

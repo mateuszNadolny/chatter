@@ -1,13 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
 import axios from 'axios';
 
+import { signIn, useSession } from 'next-auth/react';
+
 import { useToast } from '@/components/ui/use-toast';
+
+import useLoadingStore from './auth-store';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,8 +44,16 @@ const formSchema = z.object({
 });
 
 const RegisterForm = () => {
-  const [loading, setLoading] = useState(false);
+  const session = useSession();
+  const router = useRouter();
+  const { loading, setIsLoading } = useLoadingStore();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      router.push('/conversations');
+    }
+  }, [session?.status, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,16 +65,37 @@ const RegisterForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    axios.post('/api/register', values).catch((error) => {
-      toast({
-        variant: 'destructive',
-        title: 'Something went wrong',
-        description: error.response.data
-      });
+    setIsLoading(true);
+    axios
+      .post('/api/register', values)
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong',
+          description: error.response.data
+        });
+      })
+      .then(() =>
+        signIn('credentials', {
+          ...values,
+          redirect: false
+        })
+      )
+      .then((callback) => {
+        if (callback?.error) {
+          toast({
+            variant: 'destructive',
+            title: 'Something went wrong',
+            description: callback.error
+          });
+        }
 
-      setLoading(false);
-    });
+        if (callback?.ok) {
+          router.push('/conversations');
+        }
+      })
+      .catch((error) => toast({ title: 'Something went wrong', description: error.response.data }))
+      .finally(() => setIsLoading(false));
     console.log(values);
   }
 

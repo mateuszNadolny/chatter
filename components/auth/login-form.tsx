@@ -1,10 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { signIn, useSession } from 'next-auth/react';
+
+import { useToast } from '@/components/ui/use-toast';
+
+import useLoadingStore from './auth-store';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,7 +38,16 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-  const [loading, setLoading] = useState(false);
+  const session = useSession();
+  const router = useRouter();
+  const { loading, setIsLoading } = useLoadingStore();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      router.push('/conversations');
+    }
+  }, [session?.status, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,9 +58,26 @@ const LoginForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    setIsLoading(true);
+    signIn('credentials', {
+      ...values,
+      redirect: false
+    }).then((callback) => {
+      if (callback?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong',
+          description: callback.error
+        });
+        setIsLoading(false);
+      }
+
+      if (callback?.ok && !callback?.error) {
+        toast({
+          title: '✅ Login successfull!'
+        });
+      }
+    });
     console.log(values);
   }
 

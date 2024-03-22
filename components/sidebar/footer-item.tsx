@@ -21,7 +21,7 @@ const FooterItem = ({ label, icon: Icon, href, onClick, active }: FooterItemProp
       <Link
         href={href}
         className={clsx(
-          `flex rounded-md p-2 text-muted-foreground hover:bg-accent border-t-2`,
+          ` h-full flex rounded-md p-2 text-muted-foreground hover:bg-accent`,
           active && 'bg-accent text-secondary-foreground'
         )}>
         <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />

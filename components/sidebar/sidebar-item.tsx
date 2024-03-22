@@ -22,7 +22,7 @@ const SidebarItem = ({ label, icon: Icon, href, onClick, active, isLogout }: Sid
       <Link
         href={href}
         className={clsx(
-          `flex rounded-md p-3 text-muted-foreground hover:bg-accent border-t-2`,
+          `flex rounded-md p-3 text-muted-foreground hover:bg-accent`,
           active && 'bg-accent text-secondary-foreground'
         )}>
         <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />

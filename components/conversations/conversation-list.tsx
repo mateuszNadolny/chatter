@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import useConversation from '@/hooks/useConversation';
 
+import clsx from 'clsx';
+
 import ConversationListItem from './conversation-list-item';
 import StartNewConversation from './start-new-conversation';
 
@@ -20,7 +22,11 @@ const ConversationList = ({ initialConversations }: ConversationListProps) => {
   const { conversationId, isOpen } = useConversation();
 
   return (
-    <div className="flex flex-col w-full lg:w-[27rem] border-r">
+    <div
+      className={clsx(
+        'flex flex-col w-full lg:w-[27rem] border-r',
+        isOpen ? 'hidden lg:flex' : 'flex'
+      )}>
       <h2 className="m-2 pb-3 pt-5 pl-5 text-2xl font-extrabold tracking-tight transition-colors">
         Conversations
       </h2>

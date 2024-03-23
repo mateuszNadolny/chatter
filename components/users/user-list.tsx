@@ -16,7 +16,6 @@ const UserList = ({ users }: UserListProps) => {
 
   useEffect(() => {
     setSlicedUsers(filteredUsers.slice(0, 10));
-    console.log('use effecting');
   }, [filteredUsers, users]);
 
   return (

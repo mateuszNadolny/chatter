@@ -1,5 +1,11 @@
+import EmptyState from '@/components/global/empty-state';
+
 const UsersPage = () => {
-  return <div>UsersPage</div>;
+  return (
+    <div className="hidden lg:block h-full w-full">
+      <EmptyState />
+    </div>
+  );
 };
 
 export default UsersPage;

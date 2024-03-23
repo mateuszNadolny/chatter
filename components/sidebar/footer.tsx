@@ -2,7 +2,7 @@
 
 import useRoutes from '@/hooks/useRoutes';
 
-import UserAvatar from './user-avatar';
+import UserAvatar from '../global/user-avatar';
 import FooterItem from './footer-item';
 import { ThemeToggle } from '../global/theme-toggle';
 
@@ -15,7 +15,7 @@ interface FooterProps {
 const Footer = ({ currentUser }: FooterProps) => {
   const routes = useRoutes();
   return (
-    <div className="fixed bottom-0 lg:hidden w-full border border-t-2">
+    <div className="fixed bottom-0 lg:hidden w-full border-t-2">
       <ul className="p-3 flex items-center justify-between w-full h-full">
         {routes.map((item) => (
           <FooterItem

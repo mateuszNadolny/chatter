@@ -27,6 +27,9 @@ const Footer = ({ currentUser }: FooterProps) => {
             onClick={item.onClick}
           />
         ))}
+        <li>
+          <UserAvatar currentUser={currentUser} className="h-8 w-8 shrink-0" />
+        </li>
       </ul>
     </div>
   );

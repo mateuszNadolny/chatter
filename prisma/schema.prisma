@@ -70,7 +70,7 @@ model Message {
   createdAt DateTime @default(now())
 
   seenIds String[] @db.ObjectId
-  seen User[] @relation("Seen", fields: [seenIds], references: [id])
+  seen User[] @relation("Seen", fields: [seenIds], references: [id]) // i think it should be called 'seenBy'
 
   conversationId String @db.ObjectId
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

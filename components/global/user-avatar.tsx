@@ -1,4 +1,7 @@
 'use client';
+
+import useInitials from '@/hooks/useInitials';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
@@ -16,7 +19,6 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 
 import { signOut } from 'next-auth/react';
 
-import { getInitials } from '@/lib/helpers';
 import { User } from '@prisma/client';
 
 import clsx from 'clsx';
@@ -27,12 +29,14 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({ currentUser, className }: UserAvatarProps) => {
+  const initials = useInitials(currentUser.name!);
+
   return (
     <Dialog>
       <DialogTrigger>
         <Avatar className={clsx(`cursor-pointer`, className)}>
           <AvatarImage src={currentUser?.image as string} alt="User profile image" />
-          <AvatarFallback>{getInitials(currentUser?.name || '')}</AvatarFallback>
+          <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DialogTrigger>
       <DialogContent className="rounded-md w-4/5 lg:max-w-[425px]">

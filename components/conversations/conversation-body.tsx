@@ -1,5 +1,7 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+import axios from 'axios';
 
 import useConversation from '@/hooks/useConversation';
 
@@ -14,6 +16,10 @@ const ConversationBody = ({ initialMessages }: ConversationBodyProps) => {
   const [messages, setMessages] = useState<FullMessageType[]>(initialMessages);
   const bodyBottomRef = useRef<HTMLDivElement>(null);
   const { conversationId } = useConversation();
+
+  useEffect(() => {
+    axios.post(`/api/conversations/${conversationId}/seen`);
+  }, [conversationId]);
 
   return (
     <div className="h-[86%] overflow-auto">

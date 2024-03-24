@@ -29,7 +29,7 @@ const Message = ({ message, isLast }: MessageProps) => {
   const bodyClass = clsx('flex flex-col gap-2', sentByMe && 'items-end');
   const messageClass = clsx(
     'text-sm w-fit overflow-hidden',
-    sentByMe ? 'bg-sky-500 text-white' : 'bg-gray-100',
+    sentByMe ? 'bg-sky-500 text-white' : 'bg-secondary',
     message.image ? 'rounded-md p-0' : 'rounded-full py-2 px-3'
   );
 
@@ -44,23 +44,24 @@ const Message = ({ message, isLast }: MessageProps) => {
       <div className={bodyClass}>
         <div className={clsx('flex items-center gap-4', sentByMe && 'flex-row-reverse')}>
           <div className="text-sm font-semibold">{message.sender.name}</div>
-          <div className="text-xs text-gray-400">{format(new Date(message.createdAt), 'p')}</div>
+          <div className="text-xs text-muted-foreground">
+            {format(new Date(message.createdAt), 'p')}
+          </div>
         </div>
         <div className={messageClass}>
           {message.image ? <MessageImage image={message.image} /> : <div>{message.body}</div>}
         </div>
-      </div>
-
-      {isLast && sentByMe && seenList.length > 0 && (
-        <div
-          className="
+        {isLast && sentByMe && seenList.length > 0 && (
+          <div
+            className="
             text-xs 
             font-light 
-            text-gray-500
+            text-muted-foreground
             ">
-          {`Seen by ${seenList}`}
-        </div>
-      )}
+            {`Seen by ${seenList}`}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

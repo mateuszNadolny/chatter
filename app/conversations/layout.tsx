@@ -13,7 +13,7 @@ export default async function ConversationsLayout({
   const currentUser = await getCurrentUser();
   const conversations = await getConversations();
   return (
-    <div className="flex h-screen w-full">
+    <div className="lg:flex h-screen w-full">
       <Sidebar currentUser={currentUser!} />
       <ConversationList initialConversations={conversations} />
       {children}

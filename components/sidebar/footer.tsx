@@ -14,8 +14,8 @@ interface FooterProps {
 const Footer = ({ currentUser }: FooterProps) => {
   const routes = useRoutes();
   return (
-    <div className="fixed bottom-0 lg:hidden w-full border-t-2">
-      <ul className="p-3 flex items-center justify-between w-full h-full">
+    <div className="fixed z-10 bottom-0 lg:hidden w-full border-t-2 ">
+      <ul className="p-3 flex items-center justify-between w-full">
         {routes.slice(0, 2).map((item) => (
           <FooterItem
             key={item.label}

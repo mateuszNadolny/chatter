@@ -1,7 +1,28 @@
-import React from 'react';
+'use client';
+import { useState, useRef } from 'react';
 
-const ConversationBody = () => {
-  return <div className="h-[86%]">ConversationBody</div>;
+import useConversation from '@/hooks/useConversation';
+
+import Message from './message';
+
+import { FullMessageType } from '@/types';
+
+interface ConversationBodyProps {
+  initialMessages: FullMessageType[];
+}
+const ConversationBody = ({ initialMessages }: ConversationBodyProps) => {
+  const [messages, setMessages] = useState<FullMessageType[]>(initialMessages);
+  const bodyBottomRef = useRef<HTMLDivElement>(null);
+  const { conversationId } = useConversation();
+
+  return (
+    <div className="h-[86%] overflow-auto">
+      {messages.map((message, i) => (
+        <Message isLast={i === messages.length - 1} key={message.id} message={message} />
+      ))}
+      <div ref={bodyBottomRef} className="pt-20" />
+    </div>
+  );
 };
 
 export default ConversationBody;

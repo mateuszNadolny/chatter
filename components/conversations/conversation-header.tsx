@@ -26,7 +26,7 @@ const ConversationHeader = ({ conversation }: HeaderProps) => {
     <div className="w-full h-[7%] border-b px-5 flex justify-between items-center">
       <div className="flex items-center gap-3 lg:gap-4">
         <IoIosArrowBack
-          className="lg:hidden h-5 w-5 mr-2"
+          className="lg:hidden h-5 w-5 mr-2 cursor-pointer"
           onClick={() => router.push('/conversations')}
         />
         <OtherUserAvatar user={otherUser} className="lg:h-12 lg:w-12" />

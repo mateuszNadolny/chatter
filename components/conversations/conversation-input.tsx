@@ -8,6 +8,8 @@ import axios from 'axios';
 
 import useConversation from '@/hooks/useConversation';
 
+import { useToast } from '@/components/ui/use-toast';
+import { CldUploadButton } from 'next-cloudinary';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -19,7 +21,8 @@ const formSchema = z.object({
 });
 
 const ConversationInput = () => {
-  const conversationId = useConversation();
+  const { conversationId } = useConversation();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,19 +30,36 @@ const ConversationInput = () => {
     }
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    axios.post('/api/messages', { values, conversationId });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    axios.post('/api/messages', { ...values, conversationId: conversationId });
     form.reset({ message: '' });
-  }
+  };
+
+  const handleUpload = (result: any) => {
+    if (result.info.resource_type === 'image') {
+      axios.post('/api/messages', {
+        image: result.info.secure_url,
+        conversationId: conversationId
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error uploading file',
+        description: 'The file you uploaded is not an image.'
+      });
+    }
+  };
 
   return (
     <div className="border-t w-full h-[7%]">
-      <div className="px-5 w-full h-full">
+      <div className="flex gap-2 px-5 w-full h-full">
+        <CldUploadButton options={{ maxFiles: 1 }} onUpload={handleUpload} uploadPreset="pwuadtua">
+          <BiSolidImageAdd className="h-7 w-7 cursor-pointer" />
+        </CldUploadButton>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex gap-3 w-full h-full items-center">
-            <BiSolidImageAdd className="h-7 w-7 cursor-pointer" />
             <FormField
               control={form.control}
               name="message"
@@ -49,7 +69,7 @@ const ConversationInput = () => {
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Type you message..."
+                      placeholder="Type your message..."
                       className="w-full"
                     />
                   </FormControl>

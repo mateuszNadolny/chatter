@@ -26,7 +26,7 @@ const ConversationId = async ({ params }: { params: Props }) => {
   return (
     <div className="fixed lg:static top-0 left-0 w-full h-screen z-20 flex flex-col bg-background">
       <ConversationHeader conversation={conversation} />
-      <ConversationBody />
+      <ConversationBody initialMessages={messages} />
       <ConversationInput />
     </div>
   );

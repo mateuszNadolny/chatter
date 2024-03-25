@@ -36,3 +36,8 @@ env
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# stylelint
+.stylelintignore
+.stylelintrc.json
+

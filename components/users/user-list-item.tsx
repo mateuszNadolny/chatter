@@ -4,10 +4,7 @@ import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import useInitials from '@/hooks/useInitials';
 import OtherUserAvatar from '../global/other-user-avatar';
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { User } from '@prisma/client';
 
@@ -18,7 +15,6 @@ interface UserListItemProps {
 const UserListItem = ({ user }: UserListItemProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const initials = useInitials(user.name!);
 
   const handleClick = useCallback(() => {
     setIsLoading(true);

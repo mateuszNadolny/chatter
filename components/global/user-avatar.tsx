@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import useInitials from '@/hooks/useInitials';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,8 +16,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '../ui/button';
 import { ThemeToggle } from '../global/theme-toggle';
-
+import OtherUserAvatar from './other-user-avatar';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { CiSettings } from 'react-icons/ci';
 
 import { signOut } from 'next-auth/react';
 
@@ -29,6 +32,7 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({ currentUser, className }: UserAvatarProps) => {
+  const router = useRouter();
   const initials = useInitials(currentUser.name!);
 
   return (
@@ -40,20 +44,23 @@ const UserAvatar = ({ currentUser, className }: UserAvatarProps) => {
         </Avatar>
       </DialogTrigger>
       <DialogContent className="rounded-md w-4/5 lg:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader className="flex flex-row items-center gap-4 w-full mb-5">
+          <OtherUserAvatar user={currentUser} />
           <DialogTitle>{currentUser.name}</DialogTitle>
-
-          <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="w-full flex-row gap-4">
-          <ThemeToggle className="flex lg:hidden w-1/2" />
+        <DialogFooter className="w-full flex-row gap-1 lg:gap-4">
+          <ThemeToggle className="flex w-1/2" />
+          <Button size="icon" className="flex w-1/2" onClick={() => router.push('/settings')}>
+            <CiSettings className="h-5 w-5" />
+            Settings
+          </Button>
           <Button
-            variant="secondary"
+            variant="destructive"
             size="icon"
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="flex lg:hidden w-1/2">
-            {/* <RiLogoutBoxLine className="h-4 w-4" /> */}
+            className="flex w-1/2">
+            <RiLogoutBoxLine className="h-5 w-5" />
             Sign out
           </Button>
         </DialogFooter>

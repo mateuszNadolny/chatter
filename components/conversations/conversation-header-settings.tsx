@@ -100,7 +100,7 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
               <AlertDialogAction asChild onClick={handleDeleteConversation} disabled={isLoading}>
                 <Button variant="destructive">Delete</Button>
               </AlertDialogAction>

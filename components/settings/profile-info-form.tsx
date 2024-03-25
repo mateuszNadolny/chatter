@@ -17,25 +17,29 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import OtherUserAvatar from '@/components/global/other-user-avatar';
-import { FaEdit } from 'react-icons/fa';
+import ChangePasswordForm from './change-password-form';
 import { useToast } from '@/components/ui/use-toast';
 
 import { User } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
-  name: z.string().min(3, {
+  name: z.string().trim().min(3, {
     message: 'Username must be at least 3 characters.'
   }),
   displayMail: z.boolean(),
   bio: z
     .string()
+    .trim()
     .min(3, {
       message: 'Bio must be at least 3 characters.'
     })
-    .max(100, { message: 'Bio must be less than 100 characters.' }),
-  website: z.string().url({ message: 'Invalid URL.' })
+    .max(100, { message: 'Bio must be less than 100 characters.' })
+    .optional(),
+  website: z.string().url({ message: 'Invalid URL.' }).optional()
 });
 
 interface ProfileInfoProps {
@@ -43,6 +47,7 @@ interface ProfileInfoProps {
 }
 
 const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +59,6 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
     mode: 'onChange'
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
@@ -62,7 +66,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
   }
 
   return (
-    <Card className="border-none shadow-none relative overflow-auto bg-transparent">
+    <Card className="border-none shadow-none relative overflow-auto bg-transparent relative">
       <CardHeader className="mb-5 border-b pb-2">
         <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
           Profile
@@ -70,8 +74,15 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
         <CardDescription>This is how others will see you on the site.</CardDescription>
       </CardHeader>
       <CardContent>
+        <Label>Image</Label>
+        <div className="flex gap-3 mb-4 mt-2">
+          <OtherUserAvatar user={user} className="w-10 h-10" />
+          <Button variant="outline" size="sm">
+            Update image
+          </Button>
+        </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mb-2">
             <FormField
               control={form.control}
               name="name"
@@ -82,8 +93,8 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                     <Input placeholder={user.name!} {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name. It can be your real name or a pseudonym. You
-                    can only change this once every 30 days.
+                    This is your public display name. It can be your real name or a pseudonym.{' '}
+                    <br />
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -138,7 +149,17 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Update profile</Button>
+            <div className="flex gap-4">
+              <Button type="submit">Update profile</Button>
+              {user.hashedPassword && (
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => router.push('/settings/change-password')}>
+                  Want to change your password?
+                </Button>
+              )}
+            </div>
           </form>
         </Form>
       </CardContent>

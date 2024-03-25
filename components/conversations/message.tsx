@@ -1,4 +1,4 @@
-import Image from 'next/image';
+// import Image from 'next/image';
 
 import { useSession } from 'next-auth/react';
 import clsx from 'clsx';
@@ -42,9 +42,9 @@ const Message = ({ message, isLast }: MessageProps) => {
         </Avatar>
       </div>
       <div className={bodyClass}>
-        <div className={clsx('flex items-center gap-4', sentByMe && 'flex-row-reverse')}>
+        <div className={clsx('flex items-center gap-2', sentByMe && 'flex-row-reverse')}>
           <div className="text-sm font-semibold">{message.sender.name}</div>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-[9px] text-muted-foreground">
             {format(new Date(message.createdAt), 'p')}
           </div>
         </div>

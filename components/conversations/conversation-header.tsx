@@ -32,7 +32,7 @@ const ConversationHeader = ({ conversation }: HeaderProps) => {
         <OtherUserAvatar user={otherUser} className="lg:h-12 lg:w-12" />
         <h3 className="font-bold">{otherUser.name}</h3>
       </div>
-      <ConversationHeaderSettings />
+      <ConversationHeaderSettings conversation={conversation} otherUser={otherUser} />
     </div>
   );
 };

@@ -4,11 +4,9 @@ import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import OtherUserAvatar from '../global/other-user-avatar';
 
 import { User } from '@prisma/client';
-
-import { getInitials } from '@/lib/helpers';
 
 interface UserListItemProps {
   user: User;
@@ -31,13 +29,9 @@ const UserListItem = ({ user }: UserListItemProps) => {
 
   return (
     <div
-      className="w-full flex gap-4 items-center h-[60px] pl-5 cursor-pointer hover:bg-primary-foreground"
+      className="w-full flex gap-4 items-center p-4 pl-5 cursor-pointer hover:bg-primary-foreground"
       onClick={handleClick}>
-      <Avatar className="cursor-pointer flex items-center">
-        <AvatarImage src={user?.image as string} alt="User profile image" />
-        <AvatarFallback className="">{getInitials(user?.name || '')}</AvatarFallback>
-      </Avatar>
-
+      <OtherUserAvatar user={user} className="flex items-center" />
       <p>{user.name!}</p>
     </div>
   );

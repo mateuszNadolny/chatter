@@ -17,7 +17,7 @@ const Sidebar = ({ currentUser }: SidebarProps) => {
   return (
     <div className="hidden lg:flex flex-col justify-between gap-3 w-[5rem] border-r">
       <ul className="pt-10 flex flex-col gap-5 items-center justify-center">
-        <UserAvatar currentUser={currentUser} />
+        <UserAvatar currentUser={currentUser} className="mb-5" />
         {routes.map((item) => (
           <SidebarItem
             key={item.label}

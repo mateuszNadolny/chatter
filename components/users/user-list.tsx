@@ -16,14 +16,15 @@ const UserList = ({ users }: UserListProps) => {
 
   useEffect(() => {
     setSlicedUsers(filteredUsers.slice(0, 10));
-    console.log('use effecting');
   }, [filteredUsers, users]);
 
   return (
-    <div className="flex flex-col gap-3 w-full lg:w-[27rem] border-r">
-      <h2 className="p-2 pl-5 text-2xl font-extrabold tracking-tight transition-colors">Users</h2>
+    <div className="flex flex-col w-full lg:w-[27rem] border-r">
+      <h2 className="p-2 pt-5 pl-5 pb-3 text-2xl font-extrabold tracking-tight transition-colors">
+        Users
+      </h2>
       <Searchbar users={users} setFilteredUsers={setFilteredUsers} />
-      <ul className="flex flex-col gap-4">
+      <ul className="flex flex-col">
         {slicedUsers.map((user) => (
           <UserListItem key={user.id} user={user} />
         ))}

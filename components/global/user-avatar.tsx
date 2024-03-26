@@ -1,4 +1,9 @@
 'use client';
+
+import { useRouter } from 'next/navigation';
+
+import useInitials from '@/hooks/useInitials';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
@@ -9,29 +14,56 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { getInitials } from '@/lib/helpers';
+import { Button } from '../ui/button';
+import { ThemeToggle } from '../global/theme-toggle';
+import OtherUserAvatar from './other-user-avatar';
+import { RiLogoutBoxLine } from 'react-icons/ri';
+import { CiSettings } from 'react-icons/ci';
+
+import { signOut } from 'next-auth/react';
+
 import { User } from '@prisma/client';
+
+import clsx from 'clsx';
 
 interface UserAvatarProps {
   currentUser: User;
+  className?: string;
 }
 
-const UserAvatar = ({ currentUser }: UserAvatarProps) => {
+const UserAvatar = ({ currentUser, className }: UserAvatarProps) => {
+  const router = useRouter();
+  const initials = useInitials(currentUser.name!);
+
   return (
     <Dialog>
       <DialogTrigger>
-        <Avatar className="cursor-pointer mb-5">
+        <Avatar className={clsx(`cursor-pointer`, className)}>
           <AvatarImage src={currentUser?.image as string} alt="User profile image" />
-          <AvatarFallback>{getInitials(currentUser?.name || '')}</AvatarFallback>
+          <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="rounded-md w-4/5 lg:max-w-[425px]">
+        <DialogHeader className="flex flex-row items-center gap-4 w-full mb-5">
+          <OtherUserAvatar user={currentUser} />
           <DialogTitle>{currentUser.name}</DialogTitle>
-          <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <DialogFooter></DialogFooter>
+        <DialogFooter className="w-full flex-row gap-1 lg:gap-4">
+          <ThemeToggle className="flex w-1/2" />
+          <Button size="icon" className="flex w-1/2" onClick={() => router.push('/settings')}>
+            <CiSettings className="h-5 w-5" />
+            Settings
+          </Button>
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={() => signOut({ callbackUrl: '/' })}
+            className="flex w-1/2">
+            <RiLogoutBoxLine className="h-5 w-5" />
+            Sign out
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

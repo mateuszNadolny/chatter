@@ -1,9 +1,14 @@
 'use client';
+import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import axios from 'axios';
+
+import { CldUploadButton } from 'next-cloudinary';
+import { BiSolidImageAdd } from 'react-icons/bi';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
@@ -20,7 +25,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import OtherUserAvatar from '@/components/global/other-user-avatar';
-import ChangePasswordForm from './change-password-form';
 import { useToast } from '@/components/ui/use-toast';
 
 import { User } from '@prisma/client';
@@ -38,8 +42,9 @@ const formSchema = z.object({
       message: 'Bio must be at least 3 characters.'
     })
     .max(100, { message: 'Bio must be less than 100 characters.' })
-    .optional(),
-  website: z.string().url({ message: 'Invalid URL.' }).optional()
+    .optional()
+    .or(z.literal('')),
+  website: z.string().url({ message: 'Invalid URL.' }).optional().or(z.literal(''))
 });
 
 interface ProfileInfoProps {
@@ -47,23 +52,54 @@ interface ProfileInfoProps {
 }
 
 const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
+  const [loading, setIsLoading] = useState(false);
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: user.name!,
-      displayMail: user.displayMail,
-      bio: user.bio!,
-      website: user.website!
+      name: user.name || '',
+      displayMail: user.displayMail || false,
+      bio: user.bio! || '',
+      website: user.website! || ''
     },
     mode: 'onChange'
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const handleUpload = (result: any) => {
+    if (result.info.resource_type === 'image') {
+      axios.post('/api/settings/update-image', {
+        image: result.info.secure_url
+      });
+      window.location.reload();
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error uploading file',
+        description: 'The file you uploaded is not an image.'
+      });
+    }
+  };
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    axios
+      .post('api/settings', values)
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong',
+          description: error.response.data
+        });
+      })
+      .finally(() => {
+        toast({
+          title: '✅ Profile info!'
+        });
+        setIsLoading(false);
+      });
     console.log(values);
-  }
+  };
 
   return (
     <Card className="border-none shadow-none relative overflow-auto bg-transparent relative">
@@ -77,15 +113,19 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
         <Label>Image</Label>
         <div className="flex gap-3 mb-4 mt-2">
           <OtherUserAvatar user={user} className="w-10 h-10" />
-          <Button variant="outline" size="sm">
-            Update image
-          </Button>
+          <CldUploadButton
+            options={{ maxFiles: 1 }}
+            onUpload={handleUpload}
+            uploadPreset="pwuadtua">
+            <BiSolidImageAdd className="h-7 w-7 cursor-pointer" />
+          </CldUploadButton>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mb-2">
             <FormField
               control={form.control}
               name="name"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -103,6 +143,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
             <FormField
               control={form.control}
               name="displayMail"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem className="">
                   <FormLabel>Display e-mail</FormLabel>
@@ -120,6 +161,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
             <FormField
               control={form.control}
               name="bio"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
@@ -138,6 +180,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
             <FormField
               control={form.control}
               name="website"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Website</FormLabel>
@@ -150,9 +193,12 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
               )}
             />
             <div className="flex gap-4">
-              <Button type="submit">Update profile</Button>
+              <Button type="submit" disabled={loading}>
+                Update profile
+              </Button>
               {user.hashedPassword && (
                 <Button
+                  disabled={loading}
                   variant="link"
                   type="button"
                   onClick={() => router.push('/settings/change-password')}>

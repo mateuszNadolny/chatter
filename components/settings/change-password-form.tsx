@@ -14,10 +14,22 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 
 import { User } from '@prisma/client';
 
@@ -39,6 +51,8 @@ const changePasswordFormSchema = z
     path: ['confirmNewPassword'] // path of error
   });
 const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof changePasswordFormSchema>>({
     resolver: zodResolver(changePasswordFormSchema),
     defaultValues: {
@@ -108,7 +122,29 @@ const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
               )}
             />
 
-            <Button type="submit">Update password</Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button>Update password</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    After you change your password you will be logged out and need to log back in
+                    with the new password. Are you sure you want to continue?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>
+                    <Button type="submit">Update password</Button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <Button variant="link" type="button" onClick={() => router.push('/settings')}>
+              Want to change your profile info?
+            </Button>
           </form>
         </Form>
       </CardContent>

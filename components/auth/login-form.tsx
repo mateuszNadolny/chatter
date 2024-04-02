@@ -78,7 +78,6 @@ const LoginForm = () => {
         });
       }
     });
-    console.log(values);
   }
 
   return (

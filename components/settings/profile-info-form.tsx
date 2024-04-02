@@ -94,11 +94,10 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
       })
       .finally(() => {
         toast({
-          title: '✅ Profile info!'
+          title: '✅ Profile info has been updated!'
         });
         setIsLoading(false);
       });
-    console.log(values);
   };
 
   return (
@@ -133,7 +132,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                     <Input placeholder={user.name!} {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name. It can be your real name or a pseudonym.{' '}
+                    This is your public display name. It can be your real name or a pseudonym.
                     <br />
                   </FormDescription>
                   <FormMessage />

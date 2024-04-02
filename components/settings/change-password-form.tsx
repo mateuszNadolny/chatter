@@ -1,8 +1,14 @@
 'use client';
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import axios from 'axios';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -14,28 +20,9 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useRouter } from 'next/navigation';
-
-import { User } from '@prisma/client';
-
-interface ChangePasswordFormProps {
-  user: User;
-}
+import { useToast } from '@/components/ui/use-toast';
 
 const changePasswordFormSchema = z
   .object({
@@ -48,10 +35,16 @@ const changePasswordFormSchema = z
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "Passwords don't match",
-    path: ['confirmNewPassword'] // path of error
+    path: ['confirmNewPassword']
+  })
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: "New password can't be same as current one",
+    path: ['newPassword']
   });
-const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
+const ChangePasswordForm = () => {
+  const [loading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof changePasswordFormSchema>>({
     resolver: zodResolver(changePasswordFormSchema),
@@ -64,9 +57,41 @@ const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   });
 
   function onPasswordChangeSubmit(values: z.infer<typeof changePasswordFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    setIsLoading(true);
+    axios
+      .post('/api/settings/change-password', values)
+      .then((response) => {
+        if (response.status === 400) {
+          console.log('this is response' + response.data);
+          toast({
+            variant: 'destructive',
+            title: 'Something went wrong'
+            // description: response.statusText
+          });
+        } else {
+          toast({
+            title: '✅ Password has been updated!',
+            description: 'You will be logged out in a couple of seconds'
+          });
+          setIsLoading(false);
+          setTimeout(() => {
+            signOut();
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          toast({
+            variant: 'destructive',
+            title: 'Something went wrong',
+            description: error.response.data.error
+          });
+        } else {
+          console.error(error);
+        }
+        setIsLoading(false);
+      });
   }
   return (
     <Card className="border-none shadow-none relative overflow-auto bg-transparent">
@@ -82,6 +107,7 @@ const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
             <FormField
               control={form.control}
               name="currentPassword"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Current Password</FormLabel>
@@ -96,6 +122,7 @@ const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
             <FormField
               control={form.control}
               name="newPassword"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>New password</FormLabel>
@@ -110,6 +137,7 @@ const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
             <FormField
               control={form.control}
               name="confirmNewPassword"
+              disabled={loading}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm new password</FormLabel>
@@ -121,28 +149,14 @@ const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
                 </FormItem>
               )}
             />
-
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button>Update password</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    After you change your password you will be logged out and need to log back in
-                    with the new password. Are you sure you want to continue?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>
-                    <Button type="submit">Update password</Button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <Button variant="link" type="button" onClick={() => router.push('/settings')}>
+            <Button type="submit" disabled={loading}>
+              Update password
+            </Button>
+            <Button
+              variant="link"
+              type="button"
+              onClick={() => router.push('/settings')}
+              disabled={loading}>
               Want to change your profile info?
             </Button>
           </form>

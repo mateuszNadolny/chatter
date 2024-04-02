@@ -81,7 +81,9 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription className="flex gap-2 flex-col items-center">
             {groupLength}
-            <OtherUserAvatar user={otherUser} className="h-12 w-12" />
+            <OtherUserAvatar user={otherUser} className="h-20 w-20" />
+            {otherUser.displayMail && <p>{otherUser.email}</p>}
+            {otherUser.bio && <p>{otherUser.bio}</p>}
           </SheetDescription>
         </SheetHeader>
         <AlertDialog>

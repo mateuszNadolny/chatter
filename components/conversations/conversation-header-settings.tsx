@@ -78,7 +78,7 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
       </SheetTrigger>
       <SheetContent className="flex flex-col items-center">
         <SheetHeader className="mb-10">
-          <SheetTitle>{title}</SheetTitle>
+          <SheetTitle className="text-center">{title}</SheetTitle>
           <SheetDescription className="flex gap-2 flex-col items-center">
             {groupLength}
             <OtherUserAvatar user={otherUser} className="h-20 w-20" />
@@ -87,7 +87,7 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
           </SheetDescription>
         </SheetHeader>
         <AlertDialog>
-          <AlertDialogTrigger asChild>
+          <AlertDialogTrigger asChild className="absolute bottom-10">
             <Button variant="destructive" disabled={isLoading}>
               <MdDeleteForever className="h-5 w-5 mr-2" />
               Delete conversation

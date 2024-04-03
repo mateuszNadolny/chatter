@@ -1,5 +1,6 @@
 import getCurrentUser from '@/actions/getCurrentUser';
 import getConversations from '@/actions/getConversations';
+import getUsers from '@/actions/getUsers';
 
 import Sidebar from '@/components/sidebar/sidebar';
 import Footer from '@/components/sidebar/footer';
@@ -12,6 +13,7 @@ export default async function ConversationsLayout({
 }>) {
   const currentUser = await getCurrentUser();
   const conversations = await getConversations();
+
   return (
     <div className="lg:flex h-screen w-full">
       <Sidebar currentUser={currentUser!} />

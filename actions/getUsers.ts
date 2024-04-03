@@ -1,7 +1,9 @@
+'use server';
+
 import prisma from '@/lib/prismadb';
 import getSession from './getSession';
 
-const getUsers = async () => {
+export default async function getUsers() {
   const session = await getSession();
 
   if (!session?.user?.email) {
@@ -24,6 +26,4 @@ const getUsers = async () => {
   } catch (error: any) {
     return [];
   }
-};
-
-export default getUsers;
+}

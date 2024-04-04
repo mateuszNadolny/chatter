@@ -14,7 +14,6 @@ export default async function UsersLayout({
   const users = await getUsers();
 
   return (
-    // @ts-expect-error Server Component
     <div className="flex h-screen w-full">
       <Sidebar currentUser={currentUser!} />
       <UserList users={users} />

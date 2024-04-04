@@ -30,7 +30,6 @@ export default async function ConversationsLayout({
   const conversations = await getConversations();
 
   return (
-    // @ts-expect-error Server Component
     <div className="lg:flex h-screen w-full">
       <Sidebar currentUser={currentUser!} />
       <ConversationList initialConversations={conversations!} />

@@ -1,10 +1,38 @@
-import getConversationById from '@/actions/getConversationById';
-import getMessages from '@/actions/getMessages';
+import dynamic from 'next/dynamic';
 
-import EmptyState from '@/components/global/empty-state';
-import ConversationHeader from '@/components/conversations/conversation-header';
-import ConversationBody from '@/components/conversations/conversation-body';
-import ConversationInput from '@/components/conversations/conversation-input';
+import getConversationById from '../../../actions/getConversationById';
+import getMessages from '../../../actions/getMessages';
+
+// ADDING DYNAMIC IMPORT TO RESOLVE ISSUE COMING FROM APP BUILD (NPM RUN BUILD)
+// https://github.com/vercel/next.js/issues/58576
+// TODO: remove dynamic imports after Next releases fix of the issue
+
+// import EmptyState from '../../../components/global/empty-state';
+// import ConversationHeader from '../../../components/conversations/conversation-header';
+// import ConversationBody from '../../../components/conversations/conversation-body';
+// import ConversationInput from '../../../components/conversations/conversation-input';
+
+const EmptyState = dynamic(() => import('../../../components/global/empty-state'), {
+  ssr: false
+});
+const ConversationHeader = dynamic(
+  () => import('../../../components/conversations/conversation-header'),
+  {
+    ssr: false
+  }
+);
+const ConversationBody = dynamic(
+  () => import('../../../components/conversations/conversation-body'),
+  {
+    ssr: false
+  }
+);
+const ConversationInput = dynamic(
+  () => import('../../../components/conversations/conversation-input'),
+  {
+    ssr: false
+  }
+);
 
 interface Props {
   conversationId: string;

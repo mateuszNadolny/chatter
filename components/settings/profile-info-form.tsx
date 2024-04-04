@@ -71,7 +71,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
       axios.post('/api/settings/update-image', {
         image: result.info.secure_url
       });
-      window.location.reload();
+      router.refresh();
     } else {
       toast({
         variant: 'destructive',

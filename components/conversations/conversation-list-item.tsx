@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
@@ -18,6 +18,7 @@ interface ConversationListItemProps {
 }
 
 const ConversationListItem = ({ conversation, selected }: ConversationListItemProps) => {
+  const [loading, setIsLoading] = useState(false);
   const otherUser = useOtherUser(conversation);
   const session = useSession();
   const router = useRouter();

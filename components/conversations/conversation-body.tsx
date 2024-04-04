@@ -22,13 +22,13 @@ const ConversationBody = ({ initialMessages }: ConversationBodyProps) => {
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
   }, [conversationId]);
-
   useEffect(() => {
     pusherClient.subscribe(conversationId);
     bodyBottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
+
       setMessages((current) => {
         if (find(current, { id: message.id })) {
           return current;
@@ -53,12 +53,12 @@ const ConversationBody = ({ initialMessages }: ConversationBodyProps) => {
     };
 
     pusherClient.bind('messages:new', messageHandler);
-    pusherClient.bind('messages:update', updateMessageHandler);
+    pusherClient.bind('message:update', updateMessageHandler);
 
     return () => {
       pusherClient.unsubscribe(conversationId);
       pusherClient.unbind('messages:new', messageHandler);
-      pusherClient.unbind('messages:update', updateMessageHandler);
+      pusherClient.unbind('message:update', updateMessageHandler);
     };
   }, [conversationId]);
 

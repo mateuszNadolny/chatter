@@ -36,16 +36,9 @@ const ConversationList = ({ initialConversations }: ConversationListProps) => {
       return;
     }
 
-    const newConversationHandler = (conversation: FullConversationType) => {
-      setConversations((current) => {
-        if (find(current, { id: conversation.id })) {
-          return current;
-        }
-        return [...current, conversation];
-      });
-    };
+    pusherClient.subscribe(pusherKey);
 
-    const updateConversationHandler = (conversation: FullConversationType) => {
+    const updateHandler = (conversation: FullConversationType) => {
       setConversations((current) =>
         current.map((currentConversation) => {
           if (currentConversation.id === conversation.id) {
@@ -60,24 +53,26 @@ const ConversationList = ({ initialConversations }: ConversationListProps) => {
       );
     };
 
-    const removeConversationHandler = (conversation: FullConversationType) => {
+    const newHandler = (conversation: FullConversationType) => {
+      setConversations((current) => {
+        if (find(current, { id: conversation.id })) {
+          return current;
+        }
+
+        return [conversation, ...current];
+      });
+    };
+
+    const removeHandler = (conversation: FullConversationType) => {
       setConversations((current) => {
         return [...current.filter((convo) => convo.id !== conversation.id)];
       });
     };
 
-    pusherClient.subscribe(pusherKey);
-    pusherClient.bind('conversation:new', newConversationHandler);
-    pusherClient.bind('conversation:update', updateConversationHandler);
-    pusherClient.bind('conversation:remove', removeConversationHandler);
-
-    return () => {
-      pusherClient.unsubscribe(pusherKey);
-      pusherClient.unbind('conversation:new', newConversationHandler);
-      pusherClient.unbind('conversation:update', updateConversationHandler);
-      pusherClient.unbind('conversation:remove', removeConversationHandler);
-    };
-  }, [pusherKey]);
+    pusherClient.bind('conversation:update', updateHandler);
+    pusherClient.bind('conversation:new', newHandler);
+    pusherClient.bind('conversation:remove', removeHandler);
+  }, [pusherKey, router]);
 
   return (
     <div
@@ -90,7 +85,7 @@ const ConversationList = ({ initialConversations }: ConversationListProps) => {
       </h2>
       <StartNewConversation />
       <ul className="flex flex-col">
-        {initialConversations.map((conversation) => (
+        {conversations.map((conversation) => (
           <ConversationListItem
             key={conversation.id}
             conversation={conversation}

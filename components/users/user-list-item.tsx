@@ -14,17 +14,14 @@ interface UserListItemProps {
 
 const UserListItem = ({ user }: UserListItemProps) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = useCallback(() => {
-    setIsLoading(true);
-
     axios
       .post('/api/conversations', { userId: user.id })
       .then((user) => {
         router.push(`/conversations/${user.data.id}`);
       })
-      .finally(() => setIsLoading(false));
+      .finally();
   }, [user, router]);
 
   return (

@@ -5,10 +5,12 @@ import prisma from '@/lib/prismadb';
 import { pusherServer } from '@/lib/pusher';
 
 export async function POST(request: Request) {
+  console.log('this shit is starting');
   try {
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const { userId, isGroup, members, name } = body;
+    console.log(members); // thats how members array look like: [ '6601b42eb93fd303b84f8550', '65fe0a337d9a2e22814ee67f' ]
 
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 400 });
@@ -25,12 +27,8 @@ export async function POST(request: Request) {
           isGroup,
           users: {
             connect: [
-              ...members.map((member: { value: string }) => ({
-                id: member.value
-              })),
-              {
-                id: currentUser.id
-              }
+              ...members.map((memberId: string) => ({ id: memberId })),
+              { id: currentUser.id }
             ]
           }
         },
@@ -97,6 +95,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newConversation);
   } catch (error) {
+    // console.log('what the fuck');
+    // console.error(error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }

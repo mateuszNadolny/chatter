@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import axios from 'axios';
@@ -26,13 +26,15 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '../ui/button';
 import OtherUserAvatar from '../global/other-user-avatar';
+import GroupAvatar from '../global/group-avatar';
 import { BsThreeDots } from 'react-icons/bs';
 import { MdDeleteForever } from 'react-icons/md';
 
-import { Conversation, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { FullConversationType } from '@/types';
 
 interface HeaderSettingsProps {
-  conversation: Conversation;
+  conversation: FullConversationType;
   otherUser: User;
 }
 
@@ -42,14 +44,6 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
   const title = useMemo(() => {
     return conversation.name || otherUser.name;
   }, [conversation.name, otherUser.name]);
-
-  const avatar = useMemo(() => {
-    if (conversation.isGroup) {
-      return null;
-    } else {
-      return <OtherUserAvatar user={otherUser} className="h-12 w-12" />;
-    }
-  }, [conversation, otherUser]);
 
   const groupLength = useMemo(() => {
     if (conversation.isGroup) {
@@ -80,10 +74,17 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
         <SheetHeader className="mb-10">
           <SheetTitle className="text-center">{title}</SheetTitle>
           <SheetDescription className="flex gap-2 flex-col items-center">
-            {groupLength}
-            <OtherUserAvatar user={otherUser} className="h-20 w-20" />
-            {otherUser.displayMail && <p>{otherUser.email}</p>}
-            {otherUser.bio && <p>{otherUser.bio}</p>}
+            {!conversation.isGroup && <OtherUserAvatar user={otherUser} className="h-20 w-20" />}
+            {conversation.isGroup && (
+              <GroupAvatar users={conversation.users} className="h-20 w-20" />
+            )}
+            {!conversation.isGroup && <OtherUserAvatar user={otherUser} className="h-20 w-20" />}
+            {otherUser.displayMail && !conversation.isGroup && <p>{otherUser.email}</p>}
+            {otherUser.bio && !conversation.isGroup && <p>{otherUser.bio}</p>}
+            {groupLength && <p className="text-sm text-primary pt-10">{groupLength}</p>}
+
+            {conversation.isGroup &&
+              conversation.users.map((user) => <p key={user.id}>{user.name}</p>)}
           </SheetDescription>
         </SheetHeader>
         <AlertDialog>

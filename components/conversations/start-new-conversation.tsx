@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 import { Button } from '../ui/button';
 import { BiSolidMessageAdd } from 'react-icons/bi';
 import {
@@ -10,8 +14,10 @@ import {
 import StartNewConversationForm from './start-new-conversation-form';
 
 const StartNewConversation = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <div className="w-full flex px-5 pb-5 border-b">
           <Button className="w-full flex gap-3">
@@ -24,7 +30,7 @@ const StartNewConversation = () => {
         <DialogHeader>
           <DialogTitle>Start new conversation</DialogTitle>
         </DialogHeader>
-        <StartNewConversationForm />
+        <StartNewConversationForm setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

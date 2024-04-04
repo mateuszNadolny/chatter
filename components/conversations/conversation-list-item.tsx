@@ -8,8 +8,8 @@ import useOtherUser from '@/hooks/useOtherUser';
 import clsx from 'clsx';
 
 import OtherUserAvatar from '../global/other-user-avatar';
+import GroupAvatar from '../global/group-avatar';
 
-import { Conversation, Message, User } from '@prisma/client';
 import { FullConversationType } from '@/types';
 
 interface ConversationListItemProps {
@@ -71,7 +71,8 @@ const ConversationListItem = ({ conversation, selected }: ConversationListItemPr
       )}>
       <div className="flex items-center justify-between mb-1">
         <div className="flex gap-3">
-          <OtherUserAvatar user={otherUser} />
+          {!conversation.isGroup && <OtherUserAvatar user={otherUser} />}
+          {conversation.isGroup && <GroupAvatar users={conversation.users} className="h-10 w-10" />}
           <div>
             <p className="font-semibold">{conversation.name || otherUser.name}</p>
             <p className={clsx(hasSeen ? 'text-gray-500 text-sm' : 'font-extrabold text-sm')}>

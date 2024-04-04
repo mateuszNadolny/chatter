@@ -20,8 +20,7 @@ const nextConfig = {
         port: '',
         pathname: '/**'
       }
-    ],
-    domains: ['res.cloudinary.com', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com']
+    ]
   }
 };
 

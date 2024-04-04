@@ -1,6 +1,5 @@
 import getCurrentUser from '@/actions/getCurrentUser';
 import getConversations from '@/actions/getConversations';
-import getUsers from '@/actions/getUsers';
 
 import Sidebar from '@/components/sidebar/sidebar';
 import Footer from '@/components/sidebar/footer';

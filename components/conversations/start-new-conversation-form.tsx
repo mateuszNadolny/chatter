@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+import axios from 'axios';
+
 import getUsers from '@/actions/getUsers';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,7 +24,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { User } from '@prisma/client';
 
 const formSchema = z.object({
@@ -34,8 +36,16 @@ const formSchema = z.object({
   })
 });
 
-const StartNewConversationForm = () => {
+interface StartNewConversationFormProps {
+  setOpen: (open: boolean) => void;
+}
+
+const StartNewConversationForm = ({ setOpen }: StartNewConversationFormProps) => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [loading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,20 +64,42 @@ const StartNewConversationForm = () => {
   }, []);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Axios call to api route - POST request with all the values
-    console.log(values);
+    setIsLoading(true);
+
+    axios
+      .post('/api/conversations', {
+        isGroup: true,
+        members: values.members,
+        name: values.name
+      })
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong',
+          description: error.response.data
+        });
+      })
+      .then(() => {
+        router.refresh();
+      })
+      .finally(() => {
+        setIsLoading(false);
+        setOpen(false);
+      });
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
+          disabled={loading}
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Group name</FormLabel>
               <FormControl>
-                <Input placeholder="Justice League" {...field} />
+                <Input placeholder="Dunder Mifflin Groupchat..." {...field} />
               </FormControl>
               <FormDescription>This is name of your groupchat.</FormDescription>
               <FormMessage />
@@ -78,6 +110,7 @@ const StartNewConversationForm = () => {
         <FormField
           control={form.control}
           name="members"
+          disabled={loading}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Select members</FormLabel>
@@ -94,7 +127,9 @@ const StartNewConversationForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={loading}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

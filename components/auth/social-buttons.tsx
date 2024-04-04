@@ -4,12 +4,6 @@ import { useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-import axios from 'axios';
-
 import { signIn, useSession } from 'next-auth/react';
 
 import { useToast } from '@/components/ui/use-toast';

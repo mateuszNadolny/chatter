@@ -62,11 +62,9 @@ const ChangePasswordForm = () => {
       .post('/api/settings/change-password', values)
       .then((response) => {
         if (response.status === 400) {
-          console.log('this is response' + response.data);
           toast({
             variant: 'destructive',
             title: 'Something went wrong'
-            // description: response.statusText
           });
         } else {
           toast({

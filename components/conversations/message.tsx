@@ -1,5 +1,3 @@
-// import Image from 'next/image';
-
 import { useSession } from 'next-auth/react';
 import clsx from 'clsx';
 import { format } from 'date-fns';

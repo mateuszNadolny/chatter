@@ -19,7 +19,6 @@ const GroupAvatar = ({ className, users }: GroupAvatarProps) => {
 
   return (
     <div className={cn('relative rounded-full overflow-hidden', className)}>
-      {/* User 1 (left side) */}
       <div className="absolute w-1/2 h-full">
         <Image
           src={firstUser.image ? firstUser.image : '/default.jpg'}
@@ -29,7 +28,6 @@ const GroupAvatar = ({ className, users }: GroupAvatarProps) => {
           className="rounded-l-full"
         />
       </div>
-      {/* User 2 (top right) */}
       <div className="absolute top-0 right-0 w-1/2 h-1/2">
         <Image
           src={secondUser.image ? secondUser.image : '/default.jpg'}
@@ -38,7 +36,6 @@ const GroupAvatar = ({ className, users }: GroupAvatarProps) => {
           objectFit="cover"
         />
       </div>
-      {/* User 3 (bottom right) */}
       <div className="absolute bottom-0 right-0 w-1/2 h-1/2">
         <Image
           src={thirdUser.image ? thirdUser.image : '/default.jpg'}

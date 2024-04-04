@@ -24,7 +24,7 @@ const GroupAvatar = ({ className, users }: GroupAvatarProps) => {
         <Image
           src={firstUser.image ? firstUser.image : '/default.jpg'}
           alt={firstUser.name as string}
-          layout="fill"
+          fill
           objectFit="cover"
           className="rounded-l-full"
         />
@@ -34,7 +34,7 @@ const GroupAvatar = ({ className, users }: GroupAvatarProps) => {
         <Image
           src={secondUser.image ? secondUser.image : '/default.jpg'}
           alt={secondUser.name as string}
-          layout="fill"
+          fill
           objectFit="cover"
         />
       </div>
@@ -43,7 +43,7 @@ const GroupAvatar = ({ className, users }: GroupAvatarProps) => {
         <Image
           src={thirdUser.image ? thirdUser.image : '/default.jpg'}
           alt={thirdUser.name as string}
-          layout="fill"
+          fill
           objectFit="cover"
         />
       </div>

@@ -10,14 +10,18 @@ import useConversation from '@/hooks/useConversation';
 
 import { useToast } from '@/components/ui/use-toast';
 import { CldUploadButton } from 'next-cloudinary';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { BiSolidImageAdd } from 'react-icons/bi';
 import { IoSend } from 'react-icons/io5';
 
 const formSchema = z.object({
-  message: z.string().trim().min(1)
+  message: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200, { message: 'Message must be less than 200 characters.' })
 });
 
 const ConversationInput = () => {
@@ -51,7 +55,7 @@ const ConversationInput = () => {
   };
 
   return (
-    <div className="border-t w-full h-[7%]">
+    <div className="border-t w-full h-[10%]">
       <div className="flex gap-2 px-5 w-full h-full">
         <CldUploadButton options={{ maxFiles: 1 }} onUpload={handleUpload} uploadPreset="pwuadtua">
           <BiSolidImageAdd className="h-7 w-7 cursor-pointer" />
@@ -65,6 +69,7 @@ const ConversationInput = () => {
               name="message"
               render={({ field }) => (
                 <FormItem className="w-full">
+                  <FormMessage />
                   <FormControl>
                     <Input
                       {...field}

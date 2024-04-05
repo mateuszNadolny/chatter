@@ -78,7 +78,6 @@ const ConversationHeaderSettings = ({ conversation, otherUser }: HeaderSettingsP
             {conversation.isGroup && (
               <GroupAvatar users={conversation.users} className="h-20 w-20" />
             )}
-            {!conversation.isGroup && <OtherUserAvatar user={otherUser} className="h-20 w-20" />}
             {otherUser.displayMail && !conversation.isGroup && <p>{otherUser.email}</p>}
             {otherUser.bio && !conversation.isGroup && <p>{otherUser.bio}</p>}
             {groupLength && <p className="text-sm text-primary pt-10">{groupLength}</p>}

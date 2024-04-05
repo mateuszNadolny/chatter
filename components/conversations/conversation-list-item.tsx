@@ -77,7 +77,7 @@ const ConversationListItem = ({ conversation, selected }: ConversationListItemPr
           <div>
             <p className="font-semibold">{conversation.name || otherUser.name}</p>
             <p className={clsx(hasSeen ? 'text-gray-500 text-sm' : 'font-extrabold text-sm')}>
-              {lastMessageText}
+              {lastMessageText.slice(0, 24) + '...'}
             </p>
           </div>
         </div>

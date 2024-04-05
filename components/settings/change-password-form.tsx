@@ -24,6 +24,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
+import { User } from '@prisma/client';
+
 const changePasswordFormSchema = z
   .object({
     currentPassword: z.string().trim(),
@@ -41,10 +43,17 @@ const changePasswordFormSchema = z
     message: "New password can't be same as current one",
     path: ['newPassword']
   });
-const ChangePasswordForm = () => {
+
+interface PasswordChangeProps {
+  user: User;
+}
+
+const ChangePasswordForm = ({ user }: PasswordChangeProps) => {
   const [loading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const isTestAccount = user.email === 'test.test@mail.com';
+  let header = <></>;
 
   const form = useForm<z.infer<typeof changePasswordFormSchema>>({
     resolver: zodResolver(changePasswordFormSchema),
@@ -90,21 +99,36 @@ const ChangePasswordForm = () => {
         setIsLoading(false);
       });
   }
-  return (
-    <Card className="border-none shadow-none relative overflow-auto bg-transparent">
+
+  if (isTestAccount) {
+    header = (
       <CardHeader className="mb-5 border-b pb-2">
         <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
-          Change your password
+          {`Sorry, no luck for you :(`}
         </CardTitle>
-        <CardDescription>You can update your password here.</CardDescription>
+        <CardDescription>{`You are using test account, therefore you can't change password of this profile. But feel free to check the form UI and feel the magic of exciting profile updates!`}</CardDescription>
       </CardHeader>
+    );
+  } else {
+    header = (
+      <CardHeader className="mb-5 border-b pb-2">
+        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+          Profile
+        </CardTitle>
+        <CardDescription>This is how others will see you on the site.</CardDescription>
+      </CardHeader>
+    );
+  }
+  return (
+    <Card className="border-none shadow-none relative overflow-auto bg-transparent">
+      {header}
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onPasswordChangeSubmit)} className="space-y-8">
             <FormField
               control={form.control}
               name="currentPassword"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Current Password</FormLabel>
@@ -119,7 +143,7 @@ const ChangePasswordForm = () => {
             <FormField
               control={form.control}
               name="newPassword"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>New password</FormLabel>
@@ -134,7 +158,7 @@ const ChangePasswordForm = () => {
             <FormField
               control={form.control}
               name="confirmNewPassword"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm new password</FormLabel>
@@ -146,7 +170,7 @@ const ChangePasswordForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || isTestAccount}>
               Update password
             </Button>
             <Button

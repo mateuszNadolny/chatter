@@ -55,6 +55,9 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
   const [loading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const isTestAccount = user.email === 'test.test@mail.com';
+  let header = <></>;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,6 +84,26 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
     }
   };
 
+  if (isTestAccount) {
+    header = (
+      <CardHeader className="mb-5 border-b pb-2">
+        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+          {`Sorry, no luck for you :(`}
+        </CardTitle>
+        <CardDescription>{`You are using test account, therefore you can't update this profile. But feel free to check the form UI and feel the magic of exciting profile updates!`}</CardDescription>
+      </CardHeader>
+    );
+  } else {
+    header = (
+      <CardHeader className="mb-5 border-b pb-2">
+        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+          Profile
+        </CardTitle>
+        <CardDescription>This is how others will see you on the site.</CardDescription>
+      </CardHeader>
+    );
+  }
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     axios
@@ -102,29 +125,26 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
 
   return (
     <Card className="border-none shadow-none relative overflow-auto bg-transparent relative">
-      <CardHeader className="mb-5 border-b pb-2">
-        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
-          Profile
-        </CardTitle>
-        <CardDescription>This is how others will see you on the site.</CardDescription>
-      </CardHeader>
+      {header}
       <CardContent>
         <Label>Image</Label>
         <div className="flex gap-3 mb-4 mt-2">
           <OtherUserAvatar user={user} className="w-10 h-10" />
-          <CldUploadButton
-            options={{ maxFiles: 1 }}
-            onUpload={handleUpload}
-            uploadPreset="pwuadtua">
-            <BiSolidImageAdd className="h-7 w-7 cursor-pointer" />
-          </CldUploadButton>
+          {!isTestAccount && (
+            <CldUploadButton
+              options={{ maxFiles: 1 }}
+              onUpload={handleUpload}
+              uploadPreset="pwuadtua">
+              <BiSolidImageAdd className="h-7 w-7 cursor-pointer" />
+            </CldUploadButton>
+          )}
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mb-2">
             <FormField
               control={form.control}
               name="name"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -142,7 +162,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
             <FormField
               control={form.control}
               name="displayMail"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem className="">
                   <FormLabel>Display e-mail</FormLabel>
@@ -151,7 +171,11 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                       Display your e-mail adress to people you chat with
                     </FormDescription>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={loading || isTestAccount}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -160,7 +184,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
             <FormField
               control={form.control}
               name="bio"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
@@ -179,7 +203,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
             <FormField
               control={form.control}
               name="website"
-              disabled={loading}
+              disabled={loading || isTestAccount}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Website</FormLabel>
@@ -192,7 +216,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
               )}
             />
             <div className="flex gap-4">
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading || isTestAccount}>
                 Update profile
               </Button>
               {user.hashedPassword && (

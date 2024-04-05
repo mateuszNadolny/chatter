@@ -57,6 +57,30 @@ const LoginForm = () => {
     }
   });
 
+  const handleTestLogin = () => {
+    setIsLoading(true);
+    signIn('credentials', {
+      email: 'test.test@mail.com',
+      password: 'testinguser123',
+      redirect: false
+    }).then((callback) => {
+      if (callback?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong',
+          description: callback.error
+        });
+        setIsLoading(false);
+      }
+
+      if (callback?.ok && !callback?.error) {
+        toast({
+          title: '✅ Login successfull!'
+        });
+      }
+    });
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     signIn('credentials', {
@@ -122,6 +146,15 @@ const LoginForm = () => {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <LuLoader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />}
               {!loading && 'Login'}
+            </Button>
+            <Button
+              type="button"
+              disabled={loading}
+              variant="link"
+              className="w-full text-xs"
+              size="sm"
+              onClick={handleTestLogin}>
+              Just checking things out? Login with test account
             </Button>
           </form>
         </Form>

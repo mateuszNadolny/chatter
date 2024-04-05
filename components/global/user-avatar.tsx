@@ -43,11 +43,16 @@ const UserAvatar = ({ currentUser, className }: UserAvatarProps) => {
         </Avatar>
       </DialogTrigger>
       <DialogContent className="rounded-md w-4/5 lg:max-w-[425px]">
-        <DialogHeader className="flex flex-row items-center gap-4 w-full mb-5">
+        <DialogHeader className="flex flex-row items-center gap-4 w-full">
           <OtherUserAvatar user={currentUser} />
-          <DialogTitle>{currentUser.name}</DialogTitle>
+          <div>
+            <DialogTitle>
+              {currentUser.name}
+              <p className="text-sm text-gray-500">{currentUser.email}</p>
+            </DialogTitle>
+          </div>
         </DialogHeader>
-
+        {currentUser.bio && <p className="text-lg text-center">{currentUser.bio}</p>}
         <DialogFooter className="w-full flex-row gap-1 lg:gap-4">
           <ThemeToggle className="flex w-1/2" />
           <Button size="icon" className="flex w-1/2" onClick={() => router.push('/settings')}>

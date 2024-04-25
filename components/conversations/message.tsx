@@ -26,9 +26,9 @@ const Message = ({ message, isLast }: MessageProps) => {
   const avatarClass = clsx(sentByMe && 'order-2');
   const bodyClass = clsx('flex flex-col gap-2', sentByMe && 'items-end');
   const messageClass = clsx(
-    'text-sm w-fit overflow-hidden',
+    'text-sm w-fit overflow-hidden rounded-md',
     sentByMe ? 'bg-sky-500 text-white' : 'bg-secondary',
-    message.image ? 'rounded-md p-0' : 'rounded-full py-2 px-3'
+    message.image ? 'p-0' : 'py-2 px-3'
   );
 
   return (

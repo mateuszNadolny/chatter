@@ -67,7 +67,7 @@ const ConversationBody = ({ initialMessages }: ConversationBodyProps) => {
       {messages.map((message, i) => (
         <Message isLast={i === messages.length - 1} key={message.id} message={message} />
       ))}
-      <div ref={bodyBottomRef} className="pt-20" />
+      <div ref={bodyBottomRef} />
     </div>
   );
 };

@@ -101,7 +101,9 @@ const StartNewConversationForm = ({ setOpen }: StartNewConversationFormProps) =>
               <FormControl>
                 <Input placeholder="Dunder Mifflin Groupchat..." {...field} />
               </FormControl>
-              <FormDescription>This is name of your groupchat.</FormDescription>
+              <FormDescription className="text-xs lg:text-sm">
+                This is name of your groupchat.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

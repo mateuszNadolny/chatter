@@ -87,19 +87,21 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
   if (isTestAccount) {
     header = (
       <CardHeader className="mb-5 border-b pb-2">
-        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+        <CardTitle className="scroll-m-20 text-lg lg:text-3xl font-semibold tracking-tight transition-colors">
           {`Sorry, no luck for you :(`}
         </CardTitle>
-        <CardDescription>{`You are using test account, therefore you can't update this profile. But feel free to check the form UI and feel the magic of exciting profile updates!`}</CardDescription>
+        <CardDescription className="text-xs lg:text-sm">{`You are using test account, therefore you can't update this profile. But feel free to check the form UI and feel the magic of exciting profile updates!`}</CardDescription>
       </CardHeader>
     );
   } else {
     header = (
       <CardHeader className="mb-5 border-b pb-2">
-        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+        <CardTitle className="scroll-m-20 text-lg lg:text-3xl font-semibold tracking-tight transition-colors">
           Profile
         </CardTitle>
-        <CardDescription>This is how others will see you on the site.</CardDescription>
+        <CardDescription className="text-xs lg:text-sm">
+          This is how others will see you on the site.
+        </CardDescription>
       </CardHeader>
     );
   }
@@ -151,7 +153,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                   <FormControl>
                     <Input placeholder={user.name!} {...field} />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-xs lg:text-sm">
                     This is your public display name. It can be your real name or a pseudonym.
                     <br />
                   </FormDescription>
@@ -166,8 +168,8 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
               render={({ field }) => (
                 <FormItem className="">
                   <FormLabel>Display e-mail</FormLabel>
-                  <div className="flex items-center justify-between">
-                    <FormDescription>
+                  <div className="flex flex-col-reverse lg:flex-row gap-3 lg:gap-0 lg:items-center justify-between">
+                    <FormDescription className="text-xs lg:text-sm">
                       Display your e-mail adress to people you chat with
                     </FormDescription>
                     <FormControl>
@@ -195,7 +197,9 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>Tell us a little bit about yourself</FormDescription>
+                  <FormDescription className="text-xs lg:text-sm">
+                    Tell us a little bit about yourself
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -210,13 +214,18 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                   <FormControl>
                     <Input placeholder={user.website! || 'example.com'} {...field} />
                   </FormControl>
-                  <FormDescription>Add link to your website</FormDescription>
+                  <FormDescription className="text-xs lg:text-sm">
+                    Add link to your website
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className="flex gap-4">
-              <Button type="submit" disabled={loading || isTestAccount}>
+              <Button
+                type="submit"
+                disabled={loading || isTestAccount}
+                className="text-[10px] lg:text-sm">
                 Update profile
               </Button>
               {user.hashedPassword && (
@@ -224,6 +233,7 @@ const ProfileInfoForm = ({ user }: ProfileInfoProps) => {
                   disabled={loading}
                   variant="link"
                   type="button"
+                  className="text-[10px] lg:text-sm"
                   onClick={() => router.push('/settings/change-password')}>
                   Want to change your password?
                 </Button>

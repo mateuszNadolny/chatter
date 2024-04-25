@@ -46,25 +46,28 @@ const UserAvatar = ({ currentUser, className }: UserAvatarProps) => {
         <DialogHeader className="flex flex-row items-center gap-4 w-full">
           <OtherUserAvatar user={currentUser} />
           <div>
-            <DialogTitle>
+            <DialogTitle className="flex flex-col items-start">
               {currentUser.name}
               <p className="text-sm text-gray-500">{currentUser.email}</p>
             </DialogTitle>
           </div>
         </DialogHeader>
-        {currentUser.bio && <p className="text-lg text-center">{currentUser.bio}</p>}
+        {currentUser.bio && <p className="text-xs lg:text-md">{currentUser.bio}</p>}
         <DialogFooter className="w-full flex-row gap-1 lg:gap-4">
           <ThemeToggle className="flex w-1/2" />
-          <Button size="icon" className="flex w-1/2" onClick={() => router.push('/settings')}>
-            <CiSettings className="h-5 w-5" />
+          <Button
+            size="icon"
+            className="flex gap-1 w-1/2 text-[12px] lg:text-sm"
+            onClick={() => router.push('/settings')}>
+            <CiSettings className="h-4 w-4 lg:h-5 lg:w-5" />
             Settings
           </Button>
           <Button
             variant="destructive"
             size="icon"
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="flex w-1/2">
-            <RiLogoutBoxLine className="h-5 w-5" />
+            className="flex gap-1 w-1/2 text-[12px] lg:text-sm">
+            <RiLogoutBoxLine className="h-3 w-3 lg:h-5 lg:w-5" />
             Sign out
           </Button>
         </DialogFooter>

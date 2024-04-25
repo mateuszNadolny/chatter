@@ -103,19 +103,21 @@ const ChangePasswordForm = ({ user }: PasswordChangeProps) => {
   if (isTestAccount) {
     header = (
       <CardHeader className="mb-5 border-b pb-2">
-        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+        <CardTitle className="scroll-m-20 text-lg lg:text-3xl font-semibold tracking-tight transition-colors">
           {`Sorry, no luck for you :(`}
         </CardTitle>
-        <CardDescription>{`You are using test account, therefore you can't change password of this profile. But feel free to check the form UI and feel the magic of exciting profile updates!`}</CardDescription>
+        <CardDescription className="text-xs lg:text-sm">{`You are using test account, therefore you can't change password of this profile. But feel free to check the form UI and feel the magic of exciting profile updates!`}</CardDescription>
       </CardHeader>
     );
   } else {
     header = (
       <CardHeader className="mb-5 border-b pb-2">
-        <CardTitle className="scroll-m-20  text-3xl font-semibold tracking-tight transition-colors">
+        <CardTitle className="scroll-m-20 text-lg lg:text-3xl font-semibold tracking-tight transition-colors">
           Profile
         </CardTitle>
-        <CardDescription>This is how others will see you on the site.</CardDescription>
+        <CardDescription className="text-xs lg:text-sm">
+          This is how others will see you on the site.
+        </CardDescription>
       </CardHeader>
     );
   }
@@ -135,7 +137,9 @@ const ChangePasswordForm = ({ user }: PasswordChangeProps) => {
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
-                  <FormDescription>Please enter your current password</FormDescription>
+                  <FormDescription className="text-xs lg:text-sm">
+                    Please enter your current password
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -150,7 +154,9 @@ const ChangePasswordForm = ({ user }: PasswordChangeProps) => {
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
-                  <FormDescription>Please enter your new password</FormDescription>
+                  <FormDescription className="text-xs lg:text-sm">
+                    Please enter your new password
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -165,19 +171,25 @@ const ChangePasswordForm = ({ user }: PasswordChangeProps) => {
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
-                  <FormDescription>Please confirm your new password</FormDescription>
+                  <FormDescription className="text-xs lg:text-sm">
+                    Please confirm your new password
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={loading || isTestAccount}>
+            <Button
+              type="submit"
+              className="text-[10px] lg:text-sm"
+              disabled={loading || isTestAccount}>
               Update password
             </Button>
             <Button
               variant="link"
               type="button"
               onClick={() => router.push('/settings')}
-              disabled={loading}>
+              disabled={loading}
+              className="text-[10px] lg:text-sm">
               Want to change your profile info?
             </Button>
           </form>
